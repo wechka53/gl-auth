@@ -1,0 +1,52 @@
+version: "3"
+
+networks:
+  ethernet:
+    external: true
+
+services:
+  php:
+    container_name: gl-auth-php
+    image: gl-auth/php
+    build: .docker/php
+    env_file:
+      - .docker/php/.env
+    volumes:
+      - ./:/var/www/auth
+    links:
+      - mariadb
+    depends_on:
+      - mariadb
+    networks:
+      - ethernet
+
+  mariadb:
+    container_name: gl-auth-mariadb
+    image: gl-auth/mariadb
+    build:
+      context: .
+      dockerfile: .docker/mariadb/Dockerfile
+    volumes:
+      - ./.docker-runtime/:/bitnami
+    ports:
+      - "3307:3306"
+    env_file:
+      - .docker/mariadb/.env
+    networks:
+      - ethernet
+
+  nginx:
+    container_name: gl-auth-nginx
+    image: gl-auth/nginx
+    build:
+      context: .
+      dockerfile: .docker/nginx/Dockerfile
+    volumes:
+      - ./:/var/www/auth
+    links:
+      - php
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - ethernet
