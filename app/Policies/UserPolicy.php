@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -21,10 +22,7 @@ class UserPolicy
      */
     public function viewAll(User $user)
     {
-        if (in_array('admin', $user->toArray()['roles'])) {
-            return true;
-        }
-
+        return $user->roles->contains('type', '=',Role::ADMIN);
     }
 
     /**

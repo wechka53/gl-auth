@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Interfaces\Services\Activation\ActivationServiceInterface;
+use App\Interfaces\Services\Auth\AuthManagerInterface;
 use App\Interfaces\Services\Auth\AuthServiceInterface;
 use App\Interfaces\Services\Mail\MailServiceInterface;
 use App\Interfaces\Services\Queue\QueueServiceInterface;
@@ -13,6 +14,7 @@ use App\Services\Mail\QueueMailService;
 use App\Services\Queue\QueueService;
 use App\Services\User\UserService;
 use Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider;
+use Illuminate\Auth\AuthManager;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
@@ -52,7 +54,7 @@ class AppServiceProvider extends ServiceProvider
             QueueService::class
         );
 
-        $this->app->bind(
+        $this->app->singleton(
             AuthServiceInterface::class,
             AuthService::class
         );

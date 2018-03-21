@@ -3,11 +3,9 @@
 
 namespace App\Services\Auth;
 
-
-use App\Interfaces\Services\Auth\AuthenticateByCredentials;
-use App\Interfaces\Services\Auth\AuthenticateById;
 use App\Interfaces\Services\Auth\AuthServiceInterface;
 use App\Models\User;
+use Illuminate\Auth\AuthManager;
 use Illuminate\Contracts\Auth\Guard;
 
 /**
@@ -27,16 +25,20 @@ class AuthService implements AuthServiceInterface
      */
     private $token;
 
+    /**
+     * @var Guard
+     */
+    private $guard;
+
 
     /**
      * AuthService constructor.
-     * @param Guard $guard
+     * @param AuthManager $authManager
      */
-    public function __construct(Guard $guard)
+    public function __construct(AuthManager $authManager)
     {
-        if ($guard->check()) {
-            $this->currentUser = $guard->user()->fresh('roles');
-        }
+        $this->guard = $authManager->guard();
+        $this->currentUser = $this->guard->user();
     }
 
     /**
@@ -47,10 +49,10 @@ class AuthService implements AuthServiceInterface
     {
         $credentials['activated'] = User::STATUS_ACTIVATED;
 
-        $this->token = auth()->attempt($credentials);
+        $this->token = $this->guard->attempt($credentials);
 
         if ($this->token) {
-            $this->currentUser = auth()->user()->fresh('roles');
+            $this->currentUser = $this->guard->user();
             return $this->currentUser;
         }
 

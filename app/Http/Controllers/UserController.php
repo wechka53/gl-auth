@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Requests\User\ActivationUserRequest;
 use App\Interfaces\Services\Auth\AuthServiceInterface;
 use App\Interfaces\Services\User\UserServiceInterface;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 /**
  * Class UserController
@@ -43,20 +45,33 @@ class UserController extends Controller
 
     /**
      * @param AuthServiceInterface $authService
-     * @return mixed
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function get(AuthServiceInterface $authService) {
+    public function get(AuthServiceInterface $authService, Request $request) {
         $currUser = $authService->getCurrentUser();
 
+        $limit = $request->query('limit', 10);
+        $offset = $request->query('offset', 0);
+
+
         if($currUser->can('viewAll', User::class)) {
-            $users = User::with('roles')->get();
+            $builder = User::with('roles');
         } else {
-            $users = User::whereDoesntHave('roles', function ($query) {
-                $query->where('type', '=', 'admin');
-            })->with('roles')->where('activated', '!=', 0)->get();
+            $builder = User::whereDoesntHave('roles', function ($query) {
+                $query->where('type', '=', Role::ADMIN);
+            })->with('roles')->where('activated', '!=', 0);
         }
 
-        return response()->success($users, ['total' => $users->count()]);
+        $total = $builder->count();
+        $users = $builder->take($limit)->skip($offset)->get();
+
+        $meta['results'] = $users->count();
+        $meta['total'] = $total;
+        $meta['limit'] = $limit;
+        $meta['offset'] = $offset;
+
+        return response()->success($users, $meta);
 
     }
 
