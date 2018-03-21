@@ -5,6 +5,10 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\JsonResponse;
 
+/**
+ * Class Profiler
+ * @package App\Http\Middleware
+ */
 class Profiler
 {
     /**

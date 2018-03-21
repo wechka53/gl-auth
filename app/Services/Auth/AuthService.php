@@ -28,6 +28,10 @@ class AuthService implements AuthServiceInterface
     private $token;
 
 
+    /**
+     * AuthService constructor.
+     * @param Guard $guard
+     */
     public function __construct(Guard $guard)
     {
         if ($guard->check()) {
