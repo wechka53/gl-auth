@@ -15,3 +15,7 @@
 Route::middleware(['guest'])->group(function () {
     Route::post('/activate', 'UserController@activate');
 });
+
+Route::middleware(['jwt.auth'])->group(function () {
+    Route::get('/users', 'UserController@get');
+});

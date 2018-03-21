@@ -8,6 +8,7 @@ use App\Interfaces\Services\Auth\AuthenticateByCredentials;
 use App\Interfaces\Services\Auth\AuthenticateById;
 use App\Interfaces\Services\Auth\AuthServiceInterface;
 use App\Models\User;
+use Illuminate\Contracts\Auth\Guard;
 
 /**
  * Class AuthService
@@ -25,6 +26,14 @@ class AuthService implements AuthServiceInterface
      * @var string|bool
      */
     private $token;
+
+
+    public function __construct(Guard $guard)
+    {
+        if ($guard->check()) {
+            $this->currentUser = $guard->user()->fresh('roles');
+        }
+    }
 
     /**
      * @param array $credentials

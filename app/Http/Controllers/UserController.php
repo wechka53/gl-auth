@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\User\ActivationUserRequest;
+use App\Interfaces\Services\Auth\AuthServiceInterface;
 use App\Interfaces\Services\User\UserServiceInterface;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -37,6 +39,25 @@ class UserController extends Controller
             ['type' => 'ValidationError'],
             JsonResponse::HTTP_BAD_REQUEST
         );
+    }
+
+    /**
+     * @param AuthServiceInterface $authService
+     * @return mixed
+     */
+    public function get(AuthServiceInterface $authService) {
+        $currUser = $authService->getCurrentUser();
+
+        if($currUser->can('viewAll', User::class)) {
+            $users = User::with('roles')->get();
+        } else {
+            $users = User::whereDoesntHave('roles', function ($query) {
+                $query->where('type', '=', 'admin');
+            })->with('roles')->where('activated', '!=', 0)->get();
+        }
+
+        return response()->success($users, ['total' => $users->count()]);
+
     }
 
 }
