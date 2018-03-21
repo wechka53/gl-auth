@@ -58,7 +58,7 @@ class UserService implements UserServiceInterface
             $user->roles()->attach($role);
 
             DB::commit();
-            return $user->fresh('roles');
+            return $user;
 
         } catch (Exception $exception) {
             DB::rollBack();

@@ -82,12 +82,7 @@ class User extends Authenticatable implements JWTSubject
      */
     public function toArray(): array
     {
-        $roles = [];
-
-        if (!empty($this->relations) && isset($this->relations['roles'])) {
-            $roles = $this->relations['roles']->pluck('type')->toArray();
-        }
-
+        $roles = $this->roles->pluck('type')->toArray();
         $attributes = $this->attributesToArray();
         $attributes['roles'] = $roles;
 

@@ -1,32 +1,31 @@
 <?php
 
+use App\Models\Role;
 use Illuminate\Database\Seeder;
 use Webpatser\Uuid\Uuid;
 
 class RolesTableSeeder extends Seeder
 {
     /**
-     * Create User roles.
-     *
-     * @return void
+     * @throws Exception
      */
     public function run(): void
     {
         DB::table('roles')->insert([
             'id' => Uuid::generate(4),
-            'type' => 'admin',
+            'type' => Role::ADMIN,
             'created_at' => \Carbon\Carbon::now()
         ]);
 
         DB::table('roles')->insert([
             'id' => Uuid::generate(4),
-            'type' => 'user',
+            'type' => Role::USER,
             'created_at' => \Carbon\Carbon::now()
         ]);
 
         DB::table('roles')->insert([
             'id' => Uuid::generate(4),
-            'type' => 'driver',
+            'type' => Role::DRIVER,
             'created_at' => \Carbon\Carbon::now()
         ]);
     }

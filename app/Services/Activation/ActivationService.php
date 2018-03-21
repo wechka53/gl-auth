@@ -87,7 +87,7 @@ class ActivationService implements ActivationServiceInterface
                 $user->save();
 
                 DB::commit();
-                return $user->fresh('roles');
+                return $user;
 
             } catch (Exception $exception) {
                 DB::rollBack();

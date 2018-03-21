@@ -24,6 +24,10 @@ class Role extends Model
 {
     use Uuids;
 
+    const ADMIN = 'admin';
+    const DRIVER = 'driver';
+    const USER = 'user';
+
     /**
      * Overrides default id incrementing
      * @var bool

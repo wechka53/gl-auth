@@ -35,7 +35,7 @@ class UserTableSeeder extends Seeder
     {
         $role = Role::where('type', 'admin')->first();
 
-        $admin = factory(User::class)->create(['email' => 'admin@admin.com']);
+        $admin = factory(User::class)->create(['email' => 'admin@admin.com', 'activated' => 1]);
 
         $admin->roles()->attach($role->id);
     }
