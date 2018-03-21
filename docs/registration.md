@@ -1,4 +1,4 @@
-Registration Documentation:
+Registration API:
 ====================
 
 **Endpoint**: POST /register
