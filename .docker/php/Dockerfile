@@ -20,7 +20,7 @@ RUN apk update \
     && rm -rf /tmp/*
 
 # COPY php.ini /usr/local/etc/php/
-COPY post-run.sh /tmp
+COPY ./post-run.sh /tmp
 
 EXPOSE 9000
 
