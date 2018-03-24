@@ -21,7 +21,7 @@ class CreateUserActivationTable extends Migration
             $table->uuid('user_id');
             $table->string('token', 255);
             $table->timestamps();
-            $table->timestamp('expired_at');
+            $table->timestamp('expired_at')->nullable();
             $table->primary('id');
 
             $table->foreign('user_id')->references('id')->on('users');
